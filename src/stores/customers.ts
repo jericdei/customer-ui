@@ -27,5 +27,13 @@ export const useCustomerStore = defineStore('customers', {
             this.customers = data
             this.loading = false
         },
+
+        async deleteCustomer(id: number) {
+            const { data } = await axios.delete(`/customers/${id}`)
+
+            return data as {
+                message: string
+            }
+        },
     },
 })

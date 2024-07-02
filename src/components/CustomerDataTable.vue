@@ -14,8 +14,10 @@ import CustomerShowModal from './CustomerShowModal.vue'
 import { useDialog } from '../composables/dialog'
 import moment from 'moment'
 import ResourceDialogFooter from './ui/ResourceDialogFooter.vue'
+import useCustomerActions from '../composables/customer'
 
 const customerStore = useCustomerStore()
+const { deleteCustomer } = useCustomerActions()
 const dialog = useDialog()
 
 onMounted(async () => await customerStore.fetchCustomers())
@@ -55,7 +57,8 @@ const menuItems: MenuItem[] = [
     {
         label: 'Delete',
         icon: 'ri-delete-bin-line',
-        command: (e) => console.log(e),
+        command: async () =>
+            await deleteCustomer(selectedCustomer.value?.id as number),
     },
 ]
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import DynamicDialog from 'primevue/dynamicdialog'
 import CustomerDataTable from './components/CustomerDataTable.vue'
+import ConfirmDialog from 'primevue/confirmdialog'
+import Toast from 'primevue/toast'
 </script>
 
 <template>
@@ -14,5 +16,7 @@ import CustomerDataTable from './components/CustomerDataTable.vue'
         </main>
 
         <DynamicDialog />
+        <ConfirmDialog />
+        <Toast />
     </div>
 </template>
