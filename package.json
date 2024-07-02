@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/plus-jakarta-sans": "^5.0.21",
     "@primevue/themes": "4.0.0-rc.2",
+    "axios": "^1.7.2",
     "primevue": "4.0.0-rc.2",
     "remixicon": "^4.3.0",
     "tailwindcss-primeui": "^0.3.2",
