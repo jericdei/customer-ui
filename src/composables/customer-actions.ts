@@ -10,6 +10,11 @@ import CustomerFormModal from '@/components/CustomerFormModal.vue'
 import FormDialogFooter from '@/components/ui/FormDialogFooter.vue'
 import { ref } from 'vue'
 
+/**
+ * Composable for common customer actions.
+ *
+ * @param datatableRef - (Optional) If the action came from a datatable, include the ref to force reset the pagination after an action.
+ */
 export default function useCustomerActions(datatableRef?: any) {
     const customerStore = useCustomerStore()
     const dialog = useDialog()
@@ -57,6 +62,7 @@ export default function useCustomerActions(datatableRef?: any) {
 
                             // Handle validation errors
                             if ('errors' in response) {
+                                // Reactively update formErrors, so it can be used inside the form modal component :)
                                 formErrors.value = response.errors
 
                                 toast.add({
@@ -78,6 +84,7 @@ export default function useCustomerActions(datatableRef?: any) {
 
                             dialogRef.close()
 
+                            // Reset table pagination
                             await customerStore.fetchCustomers({ page: 1 })
                             datatableRef?.value.resetPage()
                         },
@@ -123,6 +130,7 @@ export default function useCustomerActions(datatableRef?: any) {
                     severity: 'success',
                 })
 
+                // Reset table pagination
                 await customerStore.fetchCustomers({ page: 1 })
                 datatableRef?.value.resetPage()
             },

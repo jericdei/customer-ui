@@ -1,6 +1,9 @@
 import { DialogProps } from 'primevue/dialog'
 
-export default {
+/**
+ * Default modal props for DynamicDialog.
+ */
+const props: DialogProps = {
     position: 'top',
     style: {
         width: '50vw',
@@ -13,4 +16,6 @@ export default {
     maximizable: false,
     draggable: false,
     closeOnEscape: false,
-} satisfies DialogProps
+}
+
+export default props

@@ -4,8 +4,11 @@ import {
     DynamicDialogOptions,
 } from 'primevue/dynamicdialogoptions'
 import { useDialog as usePrimeVueDialog } from 'primevue/usedialog'
-import defaultDialogProps from '@/config/dialog'
+import defaultDialogProps from '@/config/dialog-props'
 
+/**
+ * Extended PrimeVue `useDialog` composable that includes customized default dialog props.
+ */
 export function useDialog() {
     const dialog = usePrimeVueDialog()
 
@@ -22,6 +25,9 @@ export function useDialog() {
     return { open }
 }
 
+/**
+ * Composable to easily access dialog injected ref.
+ */
 export function useDialogRef() {
     return inject<ComputedRef<DynamicDialogInstance>>(
         'dialogRef'

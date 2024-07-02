@@ -3,11 +3,6 @@ import { Customer, FetchParams, PaginatedResource } from '..'
 import axios from '@/lib/axios'
 import { AxiosError } from 'axios'
 
-type CustomerStoreState = {
-    customers?: PaginatedResource<Customer>
-    loading: boolean
-}
-
 export const useCustomerStore = defineStore('customers', {
     state: (): CustomerStoreState => ({ customers: undefined, loading: true }),
     actions: {
@@ -33,10 +28,7 @@ export const useCustomerStore = defineStore('customers', {
             try {
                 const { data } = await axios.post('/customers', customer)
 
-                return data as {
-                    message: string
-                    customer: Customer
-                }
+                return data as MutateCustomerSuccessResponse
             } catch (error) {
                 if (
                     !(error instanceof AxiosError) ||
@@ -46,10 +38,7 @@ export const useCustomerStore = defineStore('customers', {
                     throw error
                 }
 
-                return error.response?.data as {
-                    errors: Record<string, string[]>
-                    message: string
-                }
+                return error.response?.data as MutateCustomerErrorResponse
             }
         },
 
@@ -60,10 +49,7 @@ export const useCustomerStore = defineStore('customers', {
                     customer
                 )
 
-                return data as {
-                    message: string
-                    customer: Customer
-                }
+                return data as MutateCustomerSuccessResponse
             } catch (error) {
                 if (
                     !(error instanceof AxiosError) ||
@@ -73,10 +59,7 @@ export const useCustomerStore = defineStore('customers', {
                     throw error
                 }
 
-                return error.response?.data as {
-                    errors: Record<string, string[]>
-                    message: string
-                }
+                return error.response?.data as MutateCustomerErrorResponse
             }
         },
 
@@ -89,3 +72,18 @@ export const useCustomerStore = defineStore('customers', {
         },
     },
 })
+
+type CustomerStoreState = {
+    customers?: PaginatedResource<Customer>
+    loading: boolean
+}
+
+type MutateCustomerSuccessResponse = {
+    message: string
+    customer: Customer
+}
+
+type MutateCustomerErrorResponse = {
+    errors: Record<string, string[]>
+    message: string
+}
