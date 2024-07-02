@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import moment from 'moment'
 import { useDialogRef } from '../composables/dialog'
 
 const {
@@ -22,19 +23,37 @@ const {
                     <span class="font-bold">Last Name: </span
                     >{{ customer.last_name }}
                 </li>
+
+                <li>
+                    <span class="font-bold">Email Address: </span
+                    >{{ customer.email }}
+                </li>
             </ul>
         </div>
 
         <div class="col-span-6">
             <ul class="space-y-2">
                 <li>
-                    <span class="font-bold">Email Address: </span
-                    >{{ customer.email }}
+                    <span class="font-bold">Contact Number: </span
+                    >{{ customer.contact_number }}
                 </li>
 
                 <li>
-                    <span class="font-bold">Contact Number: </span
-                    >{{ customer.contact_number }}
+                    <span class="font-bold">Date Created: </span
+                    >{{
+                        moment(customer.created_at).format(
+                            'MMMM D, YYYY, h:mm:ss a'
+                        )
+                    }}
+                </li>
+
+                <li>
+                    <span class="font-bold">Last Updated On: </span
+                    >{{
+                        moment(customer.updated_at).format(
+                            'MMMM D, YYYY, h:mm:ss a'
+                        )
+                    }}
                 </li>
             </ul>
         </div>

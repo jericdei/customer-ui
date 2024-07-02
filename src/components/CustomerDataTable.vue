@@ -13,7 +13,7 @@ import debounce from 'lodash.debounce'
 import CustomerShowModal from './CustomerShowModal.vue'
 import { useDialog } from '../composables/dialog'
 import moment from 'moment'
-import BasicDialogFooter from './ui/BasicDialogFooter.vue'
+import ResourceDialogFooter from './ui/ResourceDialogFooter.vue'
 
 const customerStore = useCustomerStore()
 const dialog = useDialog()
@@ -40,7 +40,7 @@ const menuItems: MenuItem[] = [
                     header: 'View Customer',
                 },
                 templates: {
-                    footer: BasicDialogFooter,
+                    footer: ResourceDialogFooter,
                 },
                 data: {
                     customer: selectedCustomer,
