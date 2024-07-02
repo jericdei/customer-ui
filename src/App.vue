@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DynamicDialog from 'primevue/dynamicdialog'
 import CustomerDataTable from './components/CustomerDataTable.vue'
 </script>
 
@@ -11,5 +12,7 @@ import CustomerDataTable from './components/CustomerDataTable.vue'
         <main class="mt-8 px-32">
             <CustomerDataTable />
         </main>
+
+        <DynamicDialog />
     </div>
 </template>

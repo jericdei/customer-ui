@@ -10,8 +10,13 @@ import { MenuItem } from 'primevue/menuitem'
 import { useCustomerStore } from '../stores/customers'
 import Skeleton from 'primevue/skeleton'
 import debounce from 'lodash.debounce'
+import CustomerShowModal from './CustomerShowModal.vue'
+import { useDialog } from '../composables/dialog'
+import moment from 'moment'
+import BasicDialogFooter from './ui/BasicDialogFooter.vue'
 
 const customerStore = useCustomerStore()
+const dialog = useDialog()
 
 onMounted(async () => await customerStore.fetchCustomers())
 
@@ -29,9 +34,18 @@ const menuItems: MenuItem[] = [
     {
         label: 'View',
         icon: 'ri-eye-line',
-        command: () => {
-            console.log(selectedCustomer.value)
-        },
+        command: () =>
+            dialog.open(CustomerShowModal, {
+                props: {
+                    header: 'View Customer',
+                },
+                templates: {
+                    footer: BasicDialogFooter,
+                },
+                data: {
+                    customer: selectedCustomer,
+                },
+            }),
     },
     {
         label: 'Edit',
@@ -102,35 +116,29 @@ async function paginate(page: number, per_page: number) {
             </template>
         </Column>
 
-        <Column header="First Name">
+        <Column header="Name">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
-                <span v-else>{{ data.first_name }}</span>
+                <span v-else>{{ data.full_name }}</span>
             </template>
         </Column>
 
-        <Column header="Last Name">
+        <Column header="Date Created">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
-                <span v-else>{{ data.last_name }}</span>
+                <span v-else>{{
+                    moment(data.created_at).format('MMMM D, YYYY')
+                }}</span>
             </template>
         </Column>
 
-        <Column header="Email Address">
+        <Column header="Last Updated">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
-                <span v-else>{{ data.email }}</span>
-            </template>
-        </Column>
-
-        <Column header="Contact Number">
-            <template #body="{ data }">
-                <Skeleton v-if="customerStore.loading" class="!h-8" />
-
-                <span v-else>{{ data.contact_number }}</span>
+                <span v-else>{{ moment(data.updated_at).fromNow() }}</span>
             </template>
         </Column>
 
