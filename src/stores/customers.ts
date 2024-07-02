@@ -53,7 +53,32 @@ export const useCustomerStore = defineStore('customers', {
             }
         },
 
-        async updateCustomer(id: number, data: Customer) {},
+        async updateCustomer(customer: Customer) {
+            try {
+                const { data } = await axios.patch(
+                    `/customers/${customer.id}`,
+                    customer
+                )
+
+                return data as {
+                    message: string
+                    customer: Customer
+                }
+            } catch (error) {
+                if (
+                    !(error instanceof AxiosError) ||
+                    !error.response ||
+                    error.response.status !== 422
+                ) {
+                    throw error
+                }
+
+                return error.response?.data as {
+                    errors: Record<string, string[]>
+                    message: string
+                }
+            }
+        },
 
         async deleteCustomer(id: number) {
             const { data } = await axios.delete(`/customers/${id}`)

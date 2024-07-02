@@ -11,7 +11,7 @@ import { useCustomerStore } from '@/stores/customers'
 import Skeleton from 'primevue/skeleton'
 import debounce from 'lodash.debounce'
 import moment from 'moment'
-import useCustomerActions from '@/composables/customer'
+import useCustomerActions from '@/composables/customer-actions'
 
 const customerStore = useCustomerStore()
 

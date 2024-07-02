@@ -45,8 +45,15 @@ export default function useCustomerActions(datatableRef?: any) {
                             label: 'Yes',
                         },
                         accept: async () => {
-                            const response =
-                                await customerStore.storeCustomer(customer)
+                            let response
+
+                            if (customer.id) {
+                                response =
+                                    await customerStore.updateCustomer(customer)
+                            } else {
+                                response =
+                                    await customerStore.storeCustomer(customer)
+                            }
 
                             // Handle validation errors
                             if ('errors' in response) {
