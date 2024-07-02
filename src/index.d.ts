@@ -30,7 +30,7 @@ export type PaginationLink = {
     active: boolean
 }
 
-export type Params = {
+export type FetchParams = {
     q?: string
     page?: number
     per_page?: number

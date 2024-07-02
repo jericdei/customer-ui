@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import DataTable, { DataTableMethods } from 'primevue/datatable'
-import { Customer, PaginatedResource, Params } from '..'
+import { Customer, FetchParams } from '..'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import Menu, { MenuMethods } from 'primevue/menu'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { MenuItem } from 'primevue/menuitem'
+import { useCustomerStore } from '../stores/customers'
+import Skeleton from 'primevue/skeleton'
 
-const props = defineProps<{ data: PaginatedResource<Customer> }>()
+const customerStore = useCustomerStore()
+
+onMounted(async () => await customerStore.fetchCustomers())
 
 const datatable = ref<DataTableMethods>()
-const params = ref<Params>({
+const params = ref<FetchParams>({
     q: '',
     page: 1,
     per_page: 10,
@@ -47,16 +51,22 @@ function toggleMenu(event: MouseEvent, customer: Customer) {
 }
 
 function paginate(page: number, per_page: number) {
-    console.log(page, per_page)
+    params.value = {
+        ...params.value,
+        page,
+        per_page,
+    }
+
+    customerStore.fetchCustomers(params.value)
 }
 </script>
 
 <template>
     <DataTable
         ref="datatable"
-        :value="props.data.data"
+        :value="customerStore.customers?.data"
         data-key="id"
-        :total-records="props.data.total"
+        :total-records="customerStore.customers?.total"
         :rows="10"
         :rows-per-page-options="[10, 50, 100]"
         current-page-report-template="{first} to {last} of {totalRecords}"
@@ -78,11 +88,45 @@ function paginate(page: number, per_page: number) {
             </div>
         </template>
 
-        <Column header="ID" field="id" />
-        <Column header="First Name" field="first_name" />
-        <Column header="Last Name" field="last_name" />
-        <Column header="Email Address" field="email" />
-        <Column header="Contact Number" field="contact_number" />
+        <Column header="ID">
+            <template #body="{ data }">
+                <Skeleton v-if="customerStore.loading" class="!h-8" />
+
+                <span v-else>{{ data.id }}</span>
+            </template>
+        </Column>
+
+        <Column header="First Name">
+            <template #body="{ data }">
+                <Skeleton v-if="customerStore.loading" class="!h-8" />
+
+                <span v-else>{{ data.first_name }}</span>
+            </template>
+        </Column>
+
+        <Column header="Last Name">
+            <template #body="{ data }">
+                <Skeleton v-if="customerStore.loading" class="!h-8" />
+
+                <span v-else>{{ data.last_name }}</span>
+            </template>
+        </Column>
+
+        <Column header="Email Address">
+            <template #body="{ data }">
+                <Skeleton v-if="customerStore.loading" class="!h-8" />
+
+                <span v-else>{{ data.email }}</span>
+            </template>
+        </Column>
+
+        <Column header="Contact Number">
+            <template #body="{ data }">
+                <Skeleton v-if="customerStore.loading" class="!h-8" />
+
+                <span v-else>{{ data.contact_number }}</span>
+            </template>
+        </Column>
 
         <Column>
             <template #body="{ data }">
