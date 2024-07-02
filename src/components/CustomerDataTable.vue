@@ -108,6 +108,10 @@ async function paginate(page: number, per_page: number) {
             </div>
         </template>
 
+        <template #empty>
+            <p class="p-16 text-center">No records found.</p>
+        </template>
+
         <Column header="ID">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
