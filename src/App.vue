@@ -17,6 +17,6 @@ import Toast from 'primevue/toast'
 
         <DynamicDialog />
         <ConfirmDialog />
-        <Toast />
+        <Toast position="bottom-right" />
     </div>
 </template>

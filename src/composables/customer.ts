@@ -8,6 +8,7 @@ import { markRaw } from 'vue'
 import CustomerShowModal from '@/components/CustomerShowModal.vue'
 import CustomerFormModal from '@/components/CustomerFormModal.vue'
 import FormDialogFooter from '@/components/ui/FormDialogFooter.vue'
+import { ref } from 'vue'
 
 export default function useCustomerActions(datatableRef?: any) {
     const customerStore = useCustomerStore()
@@ -16,6 +17,8 @@ export default function useCustomerActions(datatableRef?: any) {
     const toast = useToast()
 
     const form = (customer?: Customer) => {
+        const formErrors = ref()
+
         const dialogRef = dialog.open(markRaw(CustomerFormModal), {
             props: {
                 header: 'Customer Form',
@@ -23,12 +26,13 @@ export default function useCustomerActions(datatableRef?: any) {
             data: {
                 customer,
                 formData: null,
+                formErrors,
             },
             templates: {
                 footer: markRaw(FormDialogFooter),
             },
             emits: {
-                onSubmit: (customer: any) =>
+                onSubmitForm: (customer: any) => {
                     confirm.require({
                         header: 'Confirm submission',
                         message: 'Are you sure you want to submit this form?',
@@ -41,14 +45,26 @@ export default function useCustomerActions(datatableRef?: any) {
                             label: 'Yes',
                         },
                         accept: async () => {
-                            const { message } =
+                            const response =
                                 await customerStore.storeCustomer(customer)
 
-                            // handle validation errors
+                            // Handle validation errors
+                            if ('errors' in response) {
+                                formErrors.value = response.errors
+
+                                toast.add({
+                                    summary: 'Validation Error!',
+                                    detail: response.message,
+                                    life: 3000,
+                                    severity: 'error',
+                                })
+
+                                return
+                            }
 
                             toast.add({
                                 summary: 'Success!',
-                                detail: message,
+                                detail: response.message,
                                 life: 3000,
                                 severity: 'success',
                             })
@@ -58,7 +74,8 @@ export default function useCustomerActions(datatableRef?: any) {
                             await customerStore.fetchCustomers({ page: 1 })
                             datatableRef?.value.resetPage()
                         },
-                    }),
+                    })
+                },
             },
         })
     }

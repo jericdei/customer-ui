@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Customer, FetchParams, PaginatedResource } from '..'
 import axios from '@/lib/axios'
+import { AxiosError } from 'axios'
 
 type CustomerStoreState = {
     customers?: PaginatedResource<Customer>
@@ -29,11 +30,26 @@ export const useCustomerStore = defineStore('customers', {
         },
 
         async storeCustomer(customer: Customer) {
-            const { data } = await axios.post('/customers', customer)
+            try {
+                const { data } = await axios.post('/customers', customer)
 
-            return data as {
-                message: string
-                customer: Customer
+                return data as {
+                    message: string
+                    customer: Customer
+                }
+            } catch (error) {
+                if (
+                    !(error instanceof AxiosError) ||
+                    !error.response ||
+                    error.response.status !== 422
+                ) {
+                    throw error
+                }
+
+                return error.response?.data as {
+                    errors: Record<string, string[]>
+                    message: string
+                }
             }
         },
 
