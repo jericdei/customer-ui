@@ -52,7 +52,7 @@ export default function useCustomerActions(datatableRef?: any) {
                         accept: async () => {
                             let response
 
-                            if (customer.id) {
+                            if (customer?.id) {
                                 response =
                                     await customerStore.updateCustomer(customer)
                             } else {

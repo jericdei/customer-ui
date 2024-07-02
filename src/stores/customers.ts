@@ -45,7 +45,7 @@ export const useCustomerStore = defineStore('customers', {
         async updateCustomer(customer: Customer) {
             try {
                 const { data } = await axios.patch(
-                    `/customers/${customer.id}`,
+                    `/customers/${customer?.id}`,
                     customer
                 )
 
