@@ -19,7 +19,7 @@ onMounted(async () => await customerStore.fetchCustomers())
 
 const datatable = ref()
 
-const { showCustomer, deleteCustomer } = useCustomerActions(datatable)
+const customerActions = useCustomerActions(datatable)
 
 const params = ref<FetchParams>({
     q: '',
@@ -34,19 +34,18 @@ const menuItems: MenuItem[] = [
     {
         label: 'View',
         icon: 'ri-eye-line',
-        command: () => showCustomer(selectedCustomer.value as Customer),
+        command: () => customerActions.show(selectedCustomer.value as Customer),
     },
     {
         label: 'Edit',
         icon: 'ri-pencil-line',
-        command: (e) => console.log(e),
+        command: () => customerActions.form(selectedCustomer.value as Customer),
     },
     {
         label: 'Delete',
         icon: 'ri-delete-bin-line',
-        command: async () => {
-            await deleteCustomer(selectedCustomer.value?.id as number)
-        },
+        command: () =>
+            customerActions.destroy(selectedCustomer.value?.id as number),
     },
 ]
 
@@ -95,6 +94,7 @@ async function paginate(page: number, per_page: number) {
                     label="New"
                     icon="ri-add-circle-fill"
                     severity="success"
+                    @click="customerActions.form()"
                 />
             </div>
         </template>

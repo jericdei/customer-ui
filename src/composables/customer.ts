@@ -6,6 +6,8 @@ import { useDialog } from '@/composables/dialog'
 import ResourceDialogFooter from '@/components/ui/ResourceDialogFooter.vue'
 import { markRaw } from 'vue'
 import CustomerShowModal from '@/components/CustomerShowModal.vue'
+import CustomerFormModal from '@/components/CustomerFormModal.vue'
+import FormDialogFooter from '@/components/ui/FormDialogFooter.vue'
 
 export default function useCustomerActions(datatableRef?: any) {
     const customerStore = useCustomerStore()
@@ -13,7 +15,55 @@ export default function useCustomerActions(datatableRef?: any) {
     const confirm = useConfirm()
     const toast = useToast()
 
-    const showCustomer = async (customer: Customer) => {
+    const form = (customer?: Customer) => {
+        const dialogRef = dialog.open(markRaw(CustomerFormModal), {
+            props: {
+                header: 'Customer Form',
+            },
+            data: {
+                customer,
+                formData: null,
+            },
+            templates: {
+                footer: markRaw(FormDialogFooter),
+            },
+            emits: {
+                onSubmit: (customer: any) =>
+                    confirm.require({
+                        header: 'Confirm submission',
+                        message: 'Are you sure you want to submit this form?',
+                        icon: 'ri-error-warning-line',
+                        rejectProps: {
+                            label: 'No',
+                            severity: 'danger',
+                        },
+                        acceptProps: {
+                            label: 'Yes',
+                        },
+                        accept: async () => {
+                            const { message } =
+                                await customerStore.storeCustomer(customer)
+
+                            // handle validation errors
+
+                            toast.add({
+                                summary: 'Success!',
+                                detail: message,
+                                life: 3000,
+                                severity: 'success',
+                            })
+
+                            dialogRef.close()
+
+                            await customerStore.fetchCustomers({ page: 1 })
+                            datatableRef?.value.resetPage()
+                        },
+                    }),
+            },
+        })
+    }
+
+    const show = (customer: Customer) => {
         dialog.open(markRaw(CustomerShowModal), {
             props: {
                 header: 'View Customer',
@@ -27,7 +77,7 @@ export default function useCustomerActions(datatableRef?: any) {
         })
     }
 
-    const deleteCustomer = async (id: number) => {
+    const destroy = (id: number) => {
         confirm.require({
             header: 'Confirm delete',
             message: 'Are you sure you want to delete this customer?',
@@ -50,11 +100,10 @@ export default function useCustomerActions(datatableRef?: any) {
                 })
 
                 await customerStore.fetchCustomers({ page: 1 })
-
-                datatableRef.value.resetPage()
+                datatableRef?.value.resetPage()
             },
         })
     }
 
-    return { showCustomer, deleteCustomer }
+    return { form, show, destroy }
 }

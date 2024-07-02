@@ -5,7 +5,6 @@ import { useDialogRef } from '@/composables/dialog'
 const {
     value: {
         data: { customer },
-        // close,
     },
 } = useDialogRef()
 </script>

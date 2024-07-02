@@ -10,7 +10,7 @@ export function useDialog() {
     const dialog = usePrimeVueDialog()
 
     const open = (content: any, options?: DynamicDialogOptions) => {
-        dialog.open(content, {
+        return dialog.open(content, {
             ...options,
             props: {
                 ...defaultDialogProps,

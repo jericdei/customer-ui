@@ -28,6 +28,17 @@ export const useCustomerStore = defineStore('customers', {
             this.loading = false
         },
 
+        async storeCustomer(customer: Customer) {
+            const { data } = await axios.post('/customers', customer)
+
+            return data as {
+                message: string
+                customer: Customer
+            }
+        },
+
+        async updateCustomer(id: number, data: Customer) {},
+
         async deleteCustomer(id: number) {
             const { data } = await axios.delete(`/customers/${id}`)
 
