@@ -1,11 +1,33 @@
 import { useConfirm } from 'primevue/useconfirm'
 import { useCustomerStore } from '../stores/customers'
 import { useToast } from 'primevue/usetoast'
+import { Customer } from '..'
+import { useDialog } from 'primevue/usedialog'
+import CustomerShowModal from '../components/CustomerShowModal.vue'
+import ResourceDialogFooter from '../components/ui/ResourceDialogFooter.vue'
+import { markRaw, shallowReactive } from 'vue'
 
 export default function useCustomerActions() {
     const customerStore = useCustomerStore()
+    const dialog = useDialog()
     const confirm = useConfirm()
     const toast = useToast()
+
+    const showCustomer = (customer: Customer) => {
+        const content = shallowReactive(markRaw(CustomerShowModal))
+
+        dialog.open(content, {
+            props: {
+                header: 'View Customer',
+            },
+            templates: {
+                footer: ResourceDialogFooter,
+            },
+            data: {
+                customer,
+            },
+        })
+    }
 
     const deleteCustomer = async (id: number) => {
         confirm.require({
@@ -34,5 +56,5 @@ export default function useCustomerActions() {
         })
     }
 
-    return { deleteCustomer }
+    return { showCustomer, deleteCustomer }
 }

@@ -10,15 +10,11 @@ import { MenuItem } from 'primevue/menuitem'
 import { useCustomerStore } from '../stores/customers'
 import Skeleton from 'primevue/skeleton'
 import debounce from 'lodash.debounce'
-import CustomerShowModal from './CustomerShowModal.vue'
-import { useDialog } from '../composables/dialog'
 import moment from 'moment'
-import ResourceDialogFooter from './ui/ResourceDialogFooter.vue'
 import useCustomerActions from '../composables/customer'
 
 const customerStore = useCustomerStore()
-const { deleteCustomer } = useCustomerActions()
-const dialog = useDialog()
+const { showCustomer, deleteCustomer } = useCustomerActions()
 
 onMounted(async () => await customerStore.fetchCustomers())
 
@@ -36,18 +32,7 @@ const menuItems: MenuItem[] = [
     {
         label: 'View',
         icon: 'ri-eye-line',
-        command: () =>
-            dialog.open(CustomerShowModal, {
-                props: {
-                    header: 'View Customer',
-                },
-                templates: {
-                    footer: ResourceDialogFooter,
-                },
-                data: {
-                    customer: selectedCustomer,
-                },
-            }),
+        command: () => showCustomer(selectedCustomer.value as Customer),
     },
     {
         label: 'Edit',
