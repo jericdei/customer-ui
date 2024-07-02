@@ -131,7 +131,11 @@ export default function useCustomerActions(datatableRef?: any) {
                 })
 
                 // Reset table pagination
-                await customerStore.fetchCustomers({ page: 1 })
+                await customerStore.fetchCustomers({
+                    page: 1,
+                    per_page: datatableRef?.value.d_rows ?? 10,
+                })
+
                 datatableRef?.value.resetPage()
             },
         })
