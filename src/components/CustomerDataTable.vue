@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DataTable from 'primevue/datatable'
+import DataTable, { DataTableSortEvent } from 'primevue/datatable'
 import { Customer, FetchParams } from '..'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
@@ -69,6 +69,21 @@ async function paginate(page: number, per_page: number) {
 
     await customerStore.fetchCustomers(params.value)
 }
+
+async function sort(event: DataTableSortEvent) {
+    const order = event.sortOrder && event.sortOrder === 1 ? 'asc' : 'desc'
+
+    params.value = {
+        ...params.value,
+        page: 1,
+        sort: {
+            field: (event.sortField as string) ?? 'id',
+            order: order as 'asc' | 'desc',
+        },
+    }
+
+    await customerStore.fetchCustomers(params.value)
+}
 </script>
 
 <template>
@@ -84,7 +99,9 @@ async function paginate(page: number, per_page: number) {
         striped-rows
         lazy
         paginator
+        removable-sort
         @page="paginate($event.page + 1, $event.rows)"
+        @sort="sort"
     >
         <template #header>
             <div class="flex justify-between">
@@ -103,7 +120,7 @@ async function paginate(page: number, per_page: number) {
             <p class="p-16 text-center">No records found.</p>
         </template>
 
-        <Column header="ID">
+        <Column header="ID" sortable sort-field="id">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
@@ -111,7 +128,7 @@ async function paginate(page: number, per_page: number) {
             </template>
         </Column>
 
-        <Column header="Name">
+        <Column header="Name" sortable sort-field="first_name">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
@@ -119,7 +136,7 @@ async function paginate(page: number, per_page: number) {
             </template>
         </Column>
 
-        <Column header="Date Created">
+        <Column header="Date Created" sortable sort-field="created_at">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
@@ -129,7 +146,7 @@ async function paginate(page: number, per_page: number) {
             </template>
         </Column>
 
-        <Column header="Last Updated">
+        <Column header="Last Updated" sortable sort-field="updated_at">
             <template #body="{ data }">
                 <Skeleton v-if="customerStore.loading" class="!h-8" />
 
