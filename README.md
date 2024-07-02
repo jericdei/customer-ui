@@ -34,6 +34,8 @@ bun install
 cp .env.example .env
 ```
 
+Make sure that the `VITE_API_BASE_URL` of your `.env` matches with your backend API base URL!
+
 #### 3. Build the Application
 
 ```bash
