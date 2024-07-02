@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import App from './App.vue'
+import App from '@/App.vue'
 
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
@@ -10,7 +10,7 @@ import ToastService from 'primevue/toastservice'
 
 import '@fontsource-variable/plus-jakarta-sans'
 import 'remixicon/fonts/remixicon.css'
-import './style.css'
+import '@/style.css'
 
 const pinia = createPinia()
 

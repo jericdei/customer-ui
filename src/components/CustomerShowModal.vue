@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import moment from 'moment'
-import { useDialogRef } from '../composables/dialog'
+import { useDialogRef } from '@/composables/dialog'
 
 const {
     value: {

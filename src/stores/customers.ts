@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { Customer, FetchParams, PaginatedResource } from '..'
-import axios from '../lib/axios'
+import axios from '@/lib/axios'
 
 type CustomerStoreState = {
     customers?: PaginatedResource<Customer>

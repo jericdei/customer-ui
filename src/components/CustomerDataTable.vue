@@ -7,11 +7,11 @@ import Column from 'primevue/column'
 import Menu, { MenuMethods } from 'primevue/menu'
 import { onMounted, ref, watch } from 'vue'
 import { MenuItem } from 'primevue/menuitem'
-import { useCustomerStore } from '../stores/customers'
+import { useCustomerStore } from '@/stores/customers'
 import Skeleton from 'primevue/skeleton'
 import debounce from 'lodash.debounce'
 import moment from 'moment'
-import useCustomerActions from '../composables/customer'
+import useCustomerActions from '@/composables/customer'
 
 const customerStore = useCustomerStore()
 const { showCustomer, deleteCustomer } = useCustomerActions()

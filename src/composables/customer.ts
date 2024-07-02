@@ -1,11 +1,11 @@
 import { useConfirm } from 'primevue/useconfirm'
-import { useCustomerStore } from '../stores/customers'
+import { useCustomerStore } from '@/stores/customers'
 import { useToast } from 'primevue/usetoast'
 import { Customer } from '..'
-import { useDialog } from 'primevue/usedialog'
-import CustomerShowModal from '../components/CustomerShowModal.vue'
-import ResourceDialogFooter from '../components/ui/ResourceDialogFooter.vue'
-import { markRaw, shallowReactive } from 'vue'
+import { useDialog } from '@/composables/dialog'
+import ResourceDialogFooter from '@/components/ui/ResourceDialogFooter.vue'
+import { markRaw } from 'vue'
+import CustomerShowModal from '@/components/CustomerShowModal.vue'
 
 export default function useCustomerActions() {
     const customerStore = useCustomerStore()
@@ -13,15 +13,13 @@ export default function useCustomerActions() {
     const confirm = useConfirm()
     const toast = useToast()
 
-    const showCustomer = (customer: Customer) => {
-        const content = shallowReactive(markRaw(CustomerShowModal))
-
-        dialog.open(content, {
+    const showCustomer = async (customer: Customer) => {
+        dialog.open(markRaw(CustomerShowModal), {
             props: {
                 header: 'View Customer',
             },
             templates: {
-                footer: ResourceDialogFooter,
+                footer: markRaw(ResourceDialogFooter),
             },
             data: {
                 customer,
