@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DataTable, { DataTableMethods } from 'primevue/datatable'
+import DataTable from 'primevue/datatable'
 import { Customer, FetchParams } from '..'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
@@ -14,11 +14,13 @@ import moment from 'moment'
 import useCustomerActions from '@/composables/customer'
 
 const customerStore = useCustomerStore()
-const { showCustomer, deleteCustomer } = useCustomerActions()
 
 onMounted(async () => await customerStore.fetchCustomers())
 
-const datatable = ref<DataTableMethods>()
+const datatable = ref()
+
+const { showCustomer, deleteCustomer } = useCustomerActions(datatable)
+
 const params = ref<FetchParams>({
     q: '',
     page: 1,
@@ -42,8 +44,9 @@ const menuItems: MenuItem[] = [
     {
         label: 'Delete',
         icon: 'ri-delete-bin-line',
-        command: async () =>
-            await deleteCustomer(selectedCustomer.value?.id as number),
+        command: async () => {
+            await deleteCustomer(selectedCustomer.value?.id as number)
+        },
     },
 ]
 

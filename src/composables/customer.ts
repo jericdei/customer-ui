@@ -7,7 +7,7 @@ import ResourceDialogFooter from '@/components/ui/ResourceDialogFooter.vue'
 import { markRaw } from 'vue'
 import CustomerShowModal from '@/components/CustomerShowModal.vue'
 
-export default function useCustomerActions() {
+export default function useCustomerActions(datatableRef?: any) {
     const customerStore = useCustomerStore()
     const dialog = useDialog()
     const confirm = useConfirm()
@@ -49,7 +49,9 @@ export default function useCustomerActions() {
                     severity: 'success',
                 })
 
-                await customerStore.fetchCustomers()
+                await customerStore.fetchCustomers({ page: 1 })
+
+                datatableRef.value.resetPage()
             },
         })
     }
