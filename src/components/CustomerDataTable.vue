@@ -5,10 +5,11 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import Menu, { MenuMethods } from 'primevue/menu'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { MenuItem } from 'primevue/menuitem'
 import { useCustomerStore } from '../stores/customers'
 import Skeleton from 'primevue/skeleton'
+import debounce from 'lodash.debounce'
 
 const customerStore = useCustomerStore()
 
@@ -44,20 +45,25 @@ const menuItems: MenuItem[] = [
     },
 ]
 
+watch(
+    () => params.value.q,
+    debounce(async () => await customerStore.fetchCustomers(params.value), 500)
+)
+
 function toggleMenu(event: MouseEvent, customer: Customer) {
     selectedCustomer.value = customer
 
     menu.value?.toggle(event)
 }
 
-function paginate(page: number, per_page: number) {
+async function paginate(page: number, per_page: number) {
     params.value = {
         ...params.value,
         page,
         per_page,
     }
 
-    customerStore.fetchCustomers(params.value)
+    await customerStore.fetchCustomers(params.value)
 }
 </script>
 
